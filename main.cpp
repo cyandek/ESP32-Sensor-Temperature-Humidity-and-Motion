@@ -50,16 +50,20 @@ void setup() {
 void reconnect() {
   // Loop until reconnected
   while (!client.connected()) {
-    Serial.print("Attempting MQTT connection...");
+    if (debug == true) {
+      Serial.print("Attempting MQTT connection...");
+    }
     // Attempt to connect
     if (client.connect("ESP32Sensor", MQTT_USER, MQTT_PASSWORD)) {
-      Serial.println("connected");
-      // Subscribe
-      client.subscribe("esp32/output");
+      if (debug == true) {
+        Serial.println("connected");
+      }
     } else {
-      Serial.print("failed, rc=");
-      Serial.print(client.state());
-      Serial.println(" try again in 5 seconds");
+      if (debug == true) {
+        Serial.print("failed, rc=");
+        Serial.print(client.state());
+        Serial.println(" try again in 5 seconds");
+      }
       // Wait 5 seconds before retrying
       delay(5000);
     }
