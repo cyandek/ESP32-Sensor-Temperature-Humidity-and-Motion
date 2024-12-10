@@ -7,16 +7,15 @@ WiFi can be configured by the Espressif Esptouch app if you uncommenting the WiF
 
 
 Hardware:
+
 ESP32 developement board
-
 DHT11 Temperature and Humidity Sensor Module
-
 HC-SR501 PIR Motion Sensor Module
 
 
 Software:
-Mosquitto MQTT Broker Home Assistant integration
 
+Mosquitto MQTT Broker Home Assistant integration
 https://www.home-assistant.io/integrations/mqtt
 
 
