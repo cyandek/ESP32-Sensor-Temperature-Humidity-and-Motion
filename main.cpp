@@ -24,9 +24,10 @@ DHT dht(DHTPIN, DHTTYPE);
 
 WiFiClient espClient;
 PubSubClient client(espClient);
-long lastTemp, lastMotion = 0; // Variables used to calculate intervals
-int interval = 10000;          // Interval for temperature and humidity readings
-int PIRinterval = 1000;        // Interval for motion sensor readings
+long lastDHT, lastPIR, currentTime, lastTriggerTime = 0; // Variables used to calculate intervals
+int DHTinterval = 15000; // Interval for temperature and humidity readings
+int PIRinterval = 30000; // Interval for motion sensor readings
+int Debounce = 2000;     // 2 seconds debounce delay
 bool debug = true;             // switch to debug via terminal
 
 void setup() {
@@ -201,18 +202,32 @@ void Get_Motion() {
   val = digitalRead(PIRPIN);
 
   if (val == HIGH) {
-    client.publish(Motion_Topic, "Motion Detected");
+    // Debounce
+    currentTime = millis();
+    if (currentTime - lastTriggerTime >= Debounce) {
+      // Motion detected and debounced
+      lastTriggerTime = currentTime;
 
-    if (debug == true) {
-      Serial.println("Motion Detected");
+      // client.publish(HA_State_Topic, "Motion Detected");
+      client.publish(Motion_Topic, "Motion Detected");
+
+      if (debug == true) {
+        Serial.println("Motion Detected");
+      }
     }
   }
 
   if (val == LOW) {
-    client.publish(Motion_Topic, "Clear");
+    // Debounce
+    currentTime = millis();
+    if (currentTime - lastTriggerTime >= Debounce) {
+      // Motion detected and debounced
+      // client.publish(HA_State_Topic, "Clear");
+      client.publish(Motion_Topic, "Clear");
 
-    if (debug == true) {
-      Serial.println("Clear");
+      if (debug == true) {
+        Serial.println("Clear");
+      }
     }
   }
 }
